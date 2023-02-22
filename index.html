@@ -28,15 +28,32 @@
                         .attr("width", 500)
                         .attr("height", 500);
 
+            // Get the unique years for x-axis domain
+            var years = [];
+            for (var i = 0; i < data.length; i++) {
+                var year = data[i].year;
+                if (years.indexOf(year) === -1) {
+                    years.push(year);
+                }
+            }
+
             // Set up the scales for x and y axes
             var xScale = d3.scaleBand()
                            .range([0, 400])
-                           .domain(data.map(function(d) { return d.year; }))
+                           .domain(years)
                            .padding(0.4);
+
+            var max_value = 0;
+            for (var i = 0; i < data.length; i++) {
+                var value = parseFloat(data[i].value);
+                if (value > max_value) {
+                    max_value = value;
+                }
+            }
 
             var yScale = d3.scaleLinear()
                            .range([400, 0])
-                           .domain([0, d3.max(data, function(d) { return d.value; })]);
+                           .domain([0, max_value]);
 
             // Draw the x and y axes
             svg.append("g")
@@ -54,9 +71,9 @@
                .append("rect")
                .attr("class", "bar")
                .attr("x", function(d) { return xScale(d.year) + 50; })
-               .attr("y", function(d) { return yScale(d.value) + 50; })
+               .attr("y", function(d) { return yScale(parseFloat(d.value)) + 50; })
                .attr("width", xScale.bandwidth())
-               .attr("height", function(d) { return 400 - yScale(d.value); })
+               .attr("height", function(d) { return 400 - yScale(parseFloat(d.value)); })
                .attr("fill", "steelblue");
         });
     </script>
