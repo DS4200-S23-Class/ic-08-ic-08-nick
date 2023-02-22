@@ -5,8 +5,13 @@
     <meta charset=utf-8/>
     <title>ic-08</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+    </style>
 </head>
     
 <h1 class="centered">D3 Part 2</h1>
@@ -19,65 +24,51 @@
     </div>
     
     <script>
-        // Load data from csv file
-        d3.csv("https://raw.githubusercontent.com/DS4200-S23-Class/ic-08-ic-08-nick/master/data/data.csv", function(data) {
+        // Define the dataset
+        var dataset = [5, 10, 15, 20, 25];
 
-            // Set up the SVG container
-            var svg = d3.select("#my_bar_dataviz")
-                        .append("svg")
-                        .attr("width", 500)
-                        .attr("height", 500);
+        // Set up the SVG container
+        var svg = d3.select("#my_bar_dataviz")
+                    .append("svg")
+                    .attr("width", 500)
+                    .attr("height", 500);
 
-            // Get the unique years for x-axis domain
-            var years = [];
-            for (var i = 0; i < data.length; i++) {
-                var year = data[i].year;
-                if (years.indexOf(year) === -1) {
-                    years.push(year);
-                }
-            }
+        // Set up the scales for x and y axes
+        var xScale = d3.scaleBand()
+                       .range([0, 400])
+                       .domain(d3.range(dataset.length))
+                       .padding(0.4);
 
-            // Set up the scales for x and y axes
-            var xScale = d3.scaleBand()
-                           .range([0, 400])
-                           .domain(years)
-                           .padding(0.4);
+        var yScale = d3.scaleLinear()
+                       .range([400, 0])
+                       .domain([0, d3.max(dataset)]);
 
-            var max_value = 0;
-            for (var i = 0; i < data.length; i++) {
-                var value = parseFloat(data[i].value);
-                if (value > max_value) {
-                    max_value = value;
-                }
-            }
+        // Draw the x and y axes
+        svg.append("g")
+           .attr("transform", "translate(50, 450)")
+           .call(d3.axisBottom(xScale));
 
-            var yScale = d3.scaleLinear()
-                           .range([400, 0])
-                           .domain([0, max_value]);
+        svg.append("g")
+           .attr("transform", "translate(50, 50)")
+           .call(d3.axisLeft(yScale));
 
-            // Draw the x and y axes
-            svg.append("g")
-               .attr("transform", "translate(50, 450)")
-               .call(d3.axisBottom(xScale));
-
-            svg.append("g")
-               .attr("transform", "translate(50, 50)")
-               .call(d3.axisLeft(yScale));
-
-            // Draw the bars
-            svg.selectAll(".bar")
-               .data(data)
-               .enter()
-               .append("rect")
-               .attr("class", "bar")
-               .attr("x", function(d) { return xScale(d.year) + 50; })
-               .attr("y", function(d) { return yScale(parseFloat(d.value)) + 50; })
-               .attr("width", xScale.bandwidth())
-               .attr("height", function(d) { return 400 - yScale(parseFloat(d.value)); })
-               .attr("fill", "steelblue");
-        });
+        // Draw the bars
+        svg.selectAll(".bar")
+           .data(dataset)
+           .enter()
+           .append("rect")
+           .attr("class", "bar")
+           .attr("x", function(d, i) {
+               return xScale(i) + 50;
+           })
+           .attr("y", function(d) {
+               return yScale(d) + 50;
+           })
+           .attr("width", xScale.bandwidth())
+           .attr("height", function(d) {
+               return 400 - yScale(d);
+           });
     </script>
-
 </body>
 
 </html>
