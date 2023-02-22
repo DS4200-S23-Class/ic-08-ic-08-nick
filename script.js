@@ -1,7 +1,11 @@
 // Load data from CSV file and create chart
 d3.csv("https://raw.githubusercontent.com/DS4200-S23-Class/ic-08-ic-08-nick/master/data/data.csv", function(data) {
   // Convert JSON data to an array
-  var bardata = Object.entries(data).map(entry => entry[1]);
+  var bardata = [];
+
+  for (var i = 0; i < data.length; i++) {
+    bardata.push(parseFloat(data[i].value));
+  }
 
   // Create chart
   var margin = { top: 30, right: 30, bottom: 40, left:50 }
