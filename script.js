@@ -6,11 +6,11 @@ var svg2 = d3.select("#my_bar_dataviz")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("https://raw.githubusercontent.com/DS4200-S23-Class/hw-05-hw05-nick-ethan/master/data/bar-data.csv", function(bardata) {
+d3.csv("https://raw.githubusercontent.com/DS4200-S23-Class/ic-08-ic-08-nick/master/data/data.csv", function(bardata) {
 
 var xx = d3.scaleBand()
   .range([ 0, width])
-  .domain(bardata.map(function(d) { return d.category; }))
+  .domain(bardata.map(function(d) { return d.Category; }))
   .padding(0.2);
 svg2.append("g")
   .attr("transform", "translate(0," + height + ")")
@@ -30,10 +30,10 @@ svg2.selectAll("mybar")
   .data(bardata)
   .enter()
   .append("rect")
-    .attr("x", function(d) { return xx(d.category); })
-    .attr("y", function(d) { return yy(d.amount); })
+    .attr("x", function(d) { return xx(d.Category); })
+    .attr("y", function(d) { return yy(d.Value); })
     .attr("width", xx.bandwidth())
-    .attr("height", function(d) { return height - yy(d.amount); })
+    .attr("height", function(d) { return height - yy(d.Value); })
     .attr("fill", "steelblue")
   
   })
