@@ -35,3 +35,5 @@ svg2.selectAll("mybar")
     .attr("width", xx.bandwidth())
     .attr("height", function(d) { return height - yy(d.amount); })
     .attr("fill", "steelblue")
+  
+  })
